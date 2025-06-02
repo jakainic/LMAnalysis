@@ -1,0 +1,16 @@
+nltk>=3.8.1
+PyYAML>=6.0.1
+anthropic>=0.8.1
+openai>=1.12.0
+tqdm>=4.66.1
+torch>=2.0.0
+transformers>=4.36.0
+huggingface-hub>=0.20.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+accelerate>=0.26.0  # Required for model loading with device_map
+bitsandbytes>=0.41.0  # For 8-bit quantization
+sentencepiece>=0.1.99  # For tokenization
+safetensors>=0.4.1  # For safer model loading
+tokenizers>=0.15.0  # For fast tokenization 

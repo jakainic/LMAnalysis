@@ -1,0 +1,60 @@
+# Data generation configuration
+output_dir: "data"
+
+# List generation parameters
+min_list_length: 5
+max_list_length: 15
+min_target_words: 1
+max_target_words: 8
+num_examples: 3000
+
+# Method proportions (must sum to 1.0)
+method_proportions:
+  systematic: 0.7
+  llm: 0.3
+
+# Deduplication settings
+deduplication:
+  max_similarity: 0.5  # Maximum allowed similarity between examples (0.0 to 1.0)
+  max_attempts_multiplier: 3  # Maximum number of attempts per example = num_examples * this value
+
+
+# LLM configuration for data generation
+llm:
+  model: "claude-3-sonnet-20240229"  # or "gpt-4-turbo-preview"
+  max_tokens: 1000
+  temperature: 0.7
+  custom_category_probability: 0.3  # Probability of LLM choosing its own category
+
+# Validation configuration
+validation:
+  model: "gpt-4-turbo-preview"  # or "gpt-4-turbo-preview"
+  max_tokens: 1000
+  temperature: 0.0  # Use 0 temperature for validation to ensure consistency 
+
+# Benchmarking configuration
+benchmarking:
+  models:
+    - bigscience/bloom-1b1
+    - EleutherAI/pythia-410m
+    - facebook/opt-1.3b
+    # - "meta-llama/Llama-2-7b-hf"
+    # - "Qwen/Qwen-7B"
+    # - "mistralai/Mistral-7B-v0.1"
+  use_fp16: true
+  batch_size: 1   # Process one example at a time
+
+# Mediation analysis configuration
+mediation:
+  model: bigscience/bloom-1b1
+  use_fp16: true  # Use half precision for faster inference
+  num_list_pairs: 10  # Number of similar list pairs to analyze
+  token_positions: null  # Specific token positions to analyze (null for all positions)
+  categories:
+    - fruit  # Categories to use for analysis
+    - music_instruments
+    - furniture
+    - colors
+    - minerals
+    - history
+    - weather
