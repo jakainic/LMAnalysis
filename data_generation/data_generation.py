@@ -395,7 +395,7 @@ class DataGenerator:
         random.shuffle(examples)
         
         # Save all examples in a single file
-        output_file = self.output_dir / 'mixed_examples.json'
+        output_file = self.output_dir / 'examples.json'
         with open(output_file, 'w') as f:
             json.dump(examples, f, indent=2)
         print(f"\nSaved {len(examples)} examples to {output_file}")
