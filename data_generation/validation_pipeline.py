@@ -421,7 +421,7 @@ class ValidationPipeline:
             }
         }
         
-        with open(self.output_dir / 'mixed_validation_results.json', 'w') as f:
+        with open(self.output_dir / 'validation_results.json', 'w') as f:
             json.dump(results, f, indent=2)
         
         print(f"\nValidation results saved to {self.output_dir / 'validation_results.json'}")
