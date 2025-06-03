@@ -1,0 +1,1832 @@
+[
+  {
+    "category": "dance_styles",
+    "words": [
+      "waltz",
+      "hammer",
+      "telescope",
+      "butterfly",
+      "mathematics",
+      "volcano",
+      "sandwich",
+      "library",
+      "oxygen",
+      "photograph"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Waltz is a ballroom dance style characterized by its 3/4 time signature and rotating movements. The other words represent various objects, concepts, and phenomena from different domains but are not dance styles."
+  },
+  {
+    "category": "size",
+    "words": [
+      "enormous",
+      "bicycle",
+      "minuscule",
+      "telephone",
+      "colossal",
+      "butterfly",
+      "pencil",
+      "mountain",
+      "keyboard",
+      "sandwich",
+      "elephant",
+      "microscope",
+      "calendar",
+      "notebook"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Size words included: 'enormous' (very large), 'minuscule' (very small), and 'colossal' (extremely large). Other words are common nouns from various categories like objects, animals, and nature."
+  },
+  {
+    "category": "dance_styles",
+    "words": [
+      "waltz",
+      "tango",
+      "ballet",
+      "flamenco",
+      "salsa",
+      "jazz",
+      "breakdancing",
+      "tap",
+      "swimming",
+      "running",
+      "painting",
+      "singing",
+      "cooking",
+      "writing"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Dance styles include both ballroom dances (waltz, tango), theatrical forms (ballet, tap), cultural dances (flamenco, salsa), and modern styles (jazz, breakdancing). Non-dance words are other activities and skills for contrast."
+  },
+  {
+    "category": "taste",
+    "words": [
+      "bitter",
+      "umami",
+      "tangy",
+      "telescope",
+      "bicycle",
+      "mountain",
+      "thunder",
+      "library"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included umami as a less common but well-established fifth taste, and tangy as a common taste descriptor. Other words span various categories like objects, nature, and places."
+  },
+  {
+    "category": "geometry",
+    "words": [
+      "triangle",
+      "elephant",
+      "hexagon",
+      "bicycle",
+      "rhombus",
+      "telescope",
+      "parallelogram",
+      "symphony",
+      "octagon",
+      "refrigerator",
+      "trapezoid",
+      "sandwich",
+      "pentagon",
+      "butterfly",
+      "dodecagon"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included various polygons from common (triangle, pentagon, hexagon, octagon) to less common (rhombus, parallelogram, trapezoid, dodecagon). All geometric terms refer to specific shapes with defined mathematical properties."
+  },
+  {
+    "category": "types_of_pasta",
+    "words": [
+      "spaghetti",
+      "lasagna",
+      "ravioli",
+      "penne",
+      "fettuccine",
+      "gnocchi",
+      "bread",
+      "rice",
+      "quinoa",
+      "oatmeal",
+      "barley"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included various pasta shapes and types (long, stuffed, tube, flat, dumpling-style) contrasted with other grains and starches that are not pasta"
+  },
+  {
+    "category": "types_of_clouds",
+    "words": [
+      "cumulus",
+      "stratus",
+      "cirrus",
+      "nimbus",
+      "mountain",
+      "forest",
+      "ocean",
+      "desert",
+      "valley"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included the four main cloud types (cumulus, stratus, cirrus, nimbus) along with various geographical features as non-cloud words for contrast"
+  },
+  {
+    "category": "architectural_styles",
+    "words": [
+      "baroque",
+      "sandwich",
+      "gothic",
+      "telescope",
+      "hurricane"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Baroque and Gothic are well-established architectural movements with distinctive characteristics. The other words represent food, scientific instrument, and weather phenomenon respectively."
+  },
+  {
+    "category": "accounting",
+    "words": [
+      "ledger",
+      "depreciation",
+      "accrual",
+      "amortization",
+      "bicycle",
+      "telescope",
+      "symphony",
+      "volcano",
+      "butterfly",
+      "architecture"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included mix of common accounting terms (ledger, accrual) and more technical ones (depreciation, amortization). Non-accounting words span various categories including objects, natural phenomena, and abstract concepts."
+  },
+  {
+    "category": "architectural_styles",
+    "words": [
+      "baroque",
+      "gothic",
+      "modernist",
+      "victorian",
+      "neoclassical"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "All five words represent distinct historical architectural movements with clear defining characteristics, spanning from medieval Gothic to 20th century Modernist styles"
+  },
+  {
+    "category": "artistic_movements",
+    "words": [
+      "impressionism",
+      "telephone",
+      "cubism",
+      "bicycle",
+      "romanticism",
+      "calculator",
+      "mountain",
+      "sandwich",
+      "library",
+      "telescope",
+      "elephant",
+      "keyboard"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included three major artistic movements (impressionism, cubism, romanticism) mixed with everyday objects and nouns for contrast. Each artistic movement represents a distinct historical period and aesthetic philosophy in art history."
+  },
+  {
+    "category": "wine",
+    "words": [
+      "chardonnay",
+      "bicycle",
+      "merlot",
+      "telephone",
+      "riesling",
+      "hamburger",
+      "champagne",
+      "notebook",
+      "pinot",
+      "basketball",
+      "sangiovese",
+      "umbrella",
+      "sherry",
+      "keyboard",
+      "bordeaux"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included various wine types from different regions and styles - white wines (chardonnay, riesling), red wines (merlot, pinot, sangiovese), sparkling wine (champagne), fortified wine (sherry), and regional wine (bordeaux)"
+  },
+  {
+    "category": "filmmaking",
+    "words": [
+      "cinematography",
+      "elephant",
+      "screenplay",
+      "bicycle",
+      "montage",
+      "telescope",
+      "director",
+      "sandwich",
+      "foley",
+      "mathematics",
+      "gaffer",
+      "restaurant",
+      "dolly",
+      "piano",
+      "continuity"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included technical filmmaking terms like 'foley' (sound effects), 'gaffer' (lighting director), and 'dolly' (camera movement equipment) alongside more common terms like director and screenplay"
+  },
+  {
+    "category": "age",
+    "words": [
+      "childhood",
+      "adolescence",
+      "senescence",
+      "mountain",
+      "telephone",
+      "bicycle",
+      "happiness",
+      "computer",
+      "elephant",
+      "mathematics",
+      "sandwich",
+      "umbrella",
+      "photograph",
+      "chemistry",
+      "butterfly"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included childhood (early life stage), adolescence (teenage years), and senescence (biological aging process). The remaining 12 words span various categories including objects, animals, emotions, and academic subjects."
+  },
+  {
+    "category": "weather_phenomena",
+    "words": [
+      "tornado",
+      "blizzard",
+      "hurricane",
+      "bicycle",
+      "rainbow",
+      "thunder",
+      "mathematics",
+      "hail",
+      "fog"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Weather phenomena are naturally occurring atmospheric events. Included various types from severe weather (tornado, blizzard, hurricane) to common weather conditions (hail, fog) and optical/acoustic phenomena (rainbow, thunder). Non-weather words are everyday objects/concepts."
+  },
+  {
+    "category": "cooking_methods",
+    "words": [
+      "saut\u00e9ing",
+      "hammer",
+      "braising",
+      "telescope",
+      "roasting",
+      "bicycle",
+      "mathematics",
+      "elephant",
+      "notebook",
+      "symphony",
+      "calendar",
+      "forest",
+      "volcano",
+      "painting"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Cooking methods are techniques used to prepare food through the application of heat or other processes. Included saut\u00e9ing (quick cooking in fat), braising (slow cooking with liquid), and roasting (dry heat cooking). Other words represent various unrelated categories like tools, objects, concepts, and natural phenomena."
+  },
+  {
+    "category": "military_airforce",
+    "words": [
+      "fighter",
+      "squadron",
+      "bicycle",
+      "restaurant",
+      "ocean",
+      "pencil",
+      "mountain",
+      "library",
+      "telephone",
+      "garden",
+      "keyboard",
+      "sandwich",
+      "umbrella"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Included 'fighter' (military aircraft) and 'squadron' (air force unit organization). The remaining 11 words are from diverse categories including transportation, food, nature, objects, and places."
+  },
+  {
+    "category": "music",
+    "words": [
+      "symphony",
+      "telescope",
+      "bicycle",
+      "mathematics",
+      "ocean",
+      "butterfly"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Symphony is a musical composition form, while the other words represent science/astronomy, transportation, academic subject, geography, and nature respectively"
+  },
+  {
+    "category": "literary_devices",
+    "words": [
+      "metaphor",
+      "bicycle",
+      "mountain",
+      "telephone",
+      "garden",
+      "computer",
+      "elephant"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Metaphor is a figure of speech that makes implicit comparisons between unrelated things, while the other words are concrete nouns representing physical objects or places"
+  },
+  {
+    "category": "astronomy",
+    "words": [
+      "nebula",
+      "quasar",
+      "supernova",
+      "pulsar",
+      "bicycle"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included diverse astronomical objects: nebula (gas/dust cloud), quasar (active galactic nucleus), supernova (stellar explosion), and pulsar (rotating neutron star). Bicycle is clearly not astronomy-related."
+  },
+  {
+    "category": "design",
+    "words": [
+      "blueprint",
+      "elephant",
+      "typography",
+      "telescope",
+      "wireframe",
+      "symphony",
+      "prototype",
+      "mathematics",
+      "layout",
+      "hurricane"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Design words include blueprint (architectural design), typography (text design), wireframe (UI/UX design), and layout (graphic design). Non-design words span animals, instruments, academic subjects, and natural phenomena."
+  },
+  {
+    "category": "cooking_methods",
+    "words": [
+      "saut\u00e9",
+      "braise",
+      "grill",
+      "hammer",
+      "roast",
+      "poach",
+      "blanch",
+      "telescope",
+      "steam",
+      "fry",
+      "carpet"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Included various cooking techniques from dry heat methods (grill, roast, fry, saut\u00e9) to moist heat methods (poach, blanch, steam, braise). Non-cooking words are common objects for contrast."
+  },
+  {
+    "category": "musical_instruments",
+    "words": [
+      "violin",
+      "thunder",
+      "piano",
+      "bicycle",
+      "trumpet",
+      "mountain",
+      "guitar",
+      "telephone",
+      "drums",
+      "sandwich",
+      "flute",
+      "newspaper",
+      "saxophone",
+      "computer"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included common string, wind, and percussion instruments alongside everyday non-musical objects for clear contrast"
+  },
+  {
+    "category": "corporate_prefixes",
+    "words": [
+      "multi",
+      "inter",
+      "trans",
+      "micro",
+      "macro",
+      "mega",
+      "ultra",
+      "bicycle",
+      "elephant",
+      "sunshine"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included common corporate prefixes like multi-, inter-, trans- as well as less common ones like macro-, mega-, ultra-. These prefixes are frequently used in corporate names and business terminology."
+  },
+  {
+    "category": "literary_genres",
+    "words": [
+      "mystery",
+      "hammer",
+      "romance",
+      "telescope",
+      "biography",
+      "elephant",
+      "tragedy",
+      "kitchen",
+      "comedy",
+      "mountain",
+      "epic",
+      "bicycle",
+      "notebook",
+      "forest",
+      "umbrella"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Literary genres are well-defined categories of literature with distinct characteristics. Included mystery (detective fiction), romance (love stories), tragedy (dramatic works with unhappy endings), and comedy (humorous works with happy endings). Other words are common nouns from various categories to provide clear contrast."
+  },
+  {
+    "category": "types_of_boats_and_ships",
+    "words": [
+      "yacht",
+      "canoe",
+      "frigate",
+      "bicycle",
+      "kayak",
+      "destroyer",
+      "airplane",
+      "sailboat",
+      "submarine",
+      "elephant",
+      "tugboat",
+      "refrigerator"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included various watercraft from small personal boats (canoe, kayak) to large military vessels (frigate, destroyer) and recreational craft (yacht, sailboat). Mixed with clearly non-watercraft items for contrast."
+  },
+  {
+    "category": "shopping",
+    "words": [
+      "boutique",
+      "telescope",
+      "cashier",
+      "refund",
+      "symphony"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Shopping words include 'boutique' (a type of store), 'cashier' (person who processes purchases), and 'refund' (return of money for purchases). Non-shopping words are 'telescope' (scientific instrument) and 'symphony' (musical composition)."
+  },
+  {
+    "category": "car_parts",
+    "words": [
+      "alternator",
+      "telescope",
+      "carburetor",
+      "piano",
+      "differential",
+      "butterfly",
+      "sandwich",
+      "mountain",
+      "library",
+      "pencil"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included alternator (electrical component), carburetor (fuel system component), and differential (drivetrain component) as car parts. Mixed in diverse non-automotive items from various categories."
+  },
+  {
+    "category": "furniture",
+    "words": [
+      "chair",
+      "elephant",
+      "bookshelf",
+      "telescope",
+      "armoire",
+      "bicycle",
+      "mountain",
+      "piano",
+      "thunder",
+      "calculator",
+      "newspaper",
+      "butterfly",
+      "ocean",
+      "sandwich",
+      "microscope"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included armoire as a less common furniture piece, along with common chair and bookshelf. Other words span various categories like animals, objects, natural phenomena, and instruments."
+  },
+  {
+    "category": "creation",
+    "words": [
+      "invention",
+      "sculpture",
+      "composition",
+      "genesis",
+      "fabrication",
+      "telephone",
+      "mountain",
+      "mathematics"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Creation words include both artistic creations (sculpture, composition) and acts of bringing something into existence (invention, genesis, fabrication). Non-creation words are concrete objects or abstract concepts that exist independently."
+  },
+  {
+    "category": "types_of_bridges",
+    "words": [
+      "suspension",
+      "cantilever",
+      "arch",
+      "drawbridge",
+      "trestle",
+      "rainbow",
+      "dental",
+      "captain",
+      "golden"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included various bridge engineering types (suspension, cantilever, arch, drawbridge, trestle) mixed with words that contain 'bridge' in other contexts or are commonly associated with bridges but aren't bridge types themselves"
+  },
+  {
+    "category": "fire",
+    "words": [
+      "flame",
+      "ember",
+      "ignite",
+      "conflagration",
+      "kindle",
+      "inferno",
+      "smolder",
+      "bicycle",
+      "ocean",
+      "pencil",
+      "telescope",
+      "sandwich"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included diverse fire-related words from basic (flame) to advanced (conflagration), covering nouns describing fire, verbs for starting/maintaining fire, and words for different intensities of fire"
+  },
+  {
+    "category": "radio",
+    "words": [
+      "transistor",
+      "elephant",
+      "mathematics",
+      "telescope",
+      "bicycle",
+      "symphony",
+      "archaeology",
+      "butterfly",
+      "volcano",
+      "photography",
+      "literature",
+      "microscope",
+      "geography",
+      "painting",
+      "chemistry"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Transistor is a key component in radio technology and early portable radios were commonly called 'transistor radios'. The other words span various categories including animals, sciences, arts, and objects."
+  },
+  {
+    "category": "corporate_job",
+    "words": [
+      "analyst",
+      "manager",
+      "consultant",
+      "director",
+      "coordinator",
+      "executive",
+      "supervisor",
+      "administrator"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "All words represent common corporate job titles or roles found in business organizations, ranging from entry-level positions like coordinator to senior roles like executive and director"
+  },
+  {
+    "category": "3d_printing",
+    "words": [
+      "filament",
+      "extruder",
+      "slicing",
+      "nozzle",
+      "supports",
+      "infill",
+      "telescope",
+      "bicycle",
+      "sandwich",
+      "rainfall",
+      "democracy",
+      "symphony"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included common 3D printing terms like filament and extruder, technical processes like slicing, hardware components like nozzle, and printing concepts like supports and infill structure"
+  },
+  {
+    "category": "infrastructure",
+    "words": [
+      "bridge",
+      "telescope",
+      "pipeline",
+      "library",
+      "tunnel",
+      "guitar",
+      "aqueduct",
+      "butterfly",
+      "lighthouse"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Infrastructure words include physical systems that support society: bridge (transportation), pipeline (utilities), tunnel (transportation), and aqueduct (water distribution). Less common example 'aqueduct' represents historical water infrastructure."
+  },
+  {
+    "category": "thought",
+    "words": [
+      "idea",
+      "notion",
+      "contemplation",
+      "reflection",
+      "musing",
+      "deliberation",
+      "rumination",
+      "bicycle",
+      "mountain"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included a range of thought-related words from common (idea) to more sophisticated (rumination, deliberation). Two non-target words are concrete nouns from different categories."
+  },
+  {
+    "category": "musical_genres",
+    "words": [
+      "jazz",
+      "reggae",
+      "polka",
+      "blues",
+      "tango",
+      "opera",
+      "folk",
+      "punk"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "All words represent distinct musical genres spanning different time periods, cultural origins, and stylistic characteristics - from traditional folk music to modern punk rock"
+  },
+  {
+    "category": "ghosts",
+    "words": [
+      "specter",
+      "bicycle",
+      "mountain",
+      "telescope",
+      "sandwich"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Specter is a supernatural spirit or ghost, while the other words are from completely different categories (vehicle, geography, instrument, food)"
+  },
+  {
+    "category": "board_games",
+    "words": [
+      "chess",
+      "monopoly",
+      "scrabble",
+      "tennis",
+      "checkers",
+      "swimming",
+      "backgammon",
+      "basketball",
+      "clue",
+      "football",
+      "risk",
+      "soccer",
+      "stratego",
+      "baseball",
+      "hockey"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Board games are physical games played on a board with pieces, cards, or tokens. Included classic strategy games, family games, and modern board games. Non-board games are various sports that require physical activity and are played in different venues."
+  },
+  {
+    "category": "architecture",
+    "words": [
+      "cathedral",
+      "elephant",
+      "buttress",
+      "telescope",
+      "mathematics",
+      "violin"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Cathedral is a clear architectural structure, buttress is an architectural support element. Other words span animals, science, academics, and music."
+  },
+  {
+    "category": "types_of_precipitation",
+    "words": [
+      "rain",
+      "thunder",
+      "sleet",
+      "rainbow",
+      "hail",
+      "wind",
+      "snow",
+      "lightning",
+      "fog",
+      "tornado"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Precipitation includes water that falls from clouds to Earth's surface. Rain, sleet, hail, and snow are forms of precipitation, while thunder, lightning, wind, and tornado are weather phenomena but not precipitation. Rainbow and fog involve water but are not precipitation."
+  },
+  {
+    "category": "sports",
+    "words": [
+      "basketball",
+      "elephant",
+      "badminton",
+      "telescope",
+      "computer",
+      "sandwich",
+      "library",
+      "guitar"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Included basketball as a common team sport and badminton as a less common racquet sport. Other words span various categories like animals, objects, food, places, and instruments."
+  },
+  {
+    "category": "fruit",
+    "words": [
+      "mango",
+      "telescope",
+      "bicycle",
+      "thunder",
+      "painting",
+      "keyboard",
+      "mountain"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Mango is a tropical fruit, while the other words represent diverse categories: optical instrument, vehicle, weather phenomenon, art form, computer peripheral, and geographical feature"
+  },
+  {
+    "category": "containers",
+    "words": [
+      "jar",
+      "bucket",
+      "thermos",
+      "silo",
+      "amphora",
+      "briefcase",
+      "piano",
+      "telescope"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included common containers (jar, bucket), specialized containers (thermos, silo), historical container (amphora), and portable container (briefcase). Piano and telescope are non-containers from music and optics categories."
+  },
+  {
+    "category": "screenwriting",
+    "words": [
+      "screenplay",
+      "montage",
+      "bicycle",
+      "fadeout",
+      "telescope",
+      "kitchen",
+      "dialogue",
+      "mountain"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included 'montage' which is a specific film technique, 'fadeout' as a script direction, and 'dialogue' as a core screenwriting element. Other words are from various categories like objects and locations."
+  },
+  {
+    "category": "punctuation_marks",
+    "words": [
+      "comma",
+      "elephant",
+      "bicycle",
+      "mountain",
+      "telephone",
+      "symphony",
+      "butterfly",
+      "telescope",
+      "sandwich",
+      "hurricane",
+      "cathedral",
+      "photograph",
+      "adventure",
+      "chocolate"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Only 'comma' is a punctuation mark. The other words are common nouns from various categories including animals, objects, natural phenomena, food, and concepts, providing clear contrast to the single punctuation mark."
+  },
+  {
+    "category": "chemical_elements",
+    "words": [
+      "oxygen",
+      "marble",
+      "thunder",
+      "velocity",
+      "crystal",
+      "harmony",
+      "bronze",
+      "whisper"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Only oxygen is a chemical element from the periodic table. The other words represent various concepts: marble (rock/material), thunder (sound phenomenon), velocity (physics concept), crystal (mineral structure), harmony (musical concept), bronze (alloy), and whisper (sound/action)."
+  },
+  {
+    "category": "movement",
+    "words": [
+      "sprint",
+      "glide",
+      "shuffle",
+      "saunter",
+      "telescope",
+      "migrate",
+      "piano"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included diverse movement words from running (sprint) to walking styles (shuffle, saunter) to flying (glide) and animal movement (migrate). Non-movement words are telescope (object) and piano (instrument)."
+  },
+  {
+    "category": "cotton",
+    "words": [
+      "cotton",
+      "denim",
+      "calico",
+      "muslin",
+      "flannel",
+      "wool",
+      "silk",
+      "polyester",
+      "linen"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Cotton category includes the raw material 'cotton' and four cotton-based fabrics: denim (cotton twill), calico (plain-woven cotton), muslin (lightweight cotton), and flannel (brushed cotton). Non-cotton words are other textile materials: wool, silk, polyester, and linen."
+  },
+  {
+    "category": "military_navy",
+    "words": [
+      "destroyer",
+      "admiral",
+      "bicycle",
+      "telescope",
+      "kitchen",
+      "submarine",
+      "painting",
+      "library"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Included 'destroyer' (naval warship) and 'submarine' (naval vessel) as clear military navy examples, with remaining words from various other categories like transportation, science, household, art, and education"
+  },
+  {
+    "category": "gemstones",
+    "words": [
+      "sapphire",
+      "copper",
+      "marble",
+      "granite",
+      "steel"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Sapphire is a precious gemstone, while copper and steel are metals, and marble and granite are rocks but not gemstones"
+  },
+  {
+    "category": "appearance",
+    "words": [
+      "radiant",
+      "bicycle",
+      "disheveled",
+      "mathematics",
+      "elegant",
+      "thunder",
+      "gaunt",
+      "library",
+      "telescope",
+      "luminous",
+      "philosophy",
+      "sandwich",
+      "conversation"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Appearance words include 'radiant' (glowing/bright look), 'disheveled' (messy appearance), 'elegant' (refined appearance), and 'gaunt' (thin/haggard appearance). 'Luminous' describes visual brightness but is more about light emission than personal appearance."
+  },
+  {
+    "category": "fast_food",
+    "words": [
+      "hamburger",
+      "telescope",
+      "pizza",
+      "library",
+      "tacos",
+      "violin",
+      "chicken nuggets",
+      "mountain",
+      "sandwich",
+      "astronomy",
+      "bicycle",
+      "mathematics",
+      "elephant"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included common fast food items like hamburger and pizza, plus chicken nuggets and sandwich which are widely available at fast food chains"
+  },
+  {
+    "category": "punctuation_marks",
+    "words": [
+      "comma",
+      "semicolon",
+      "period",
+      "elephant",
+      "mountain",
+      "bicycle",
+      "exclamation",
+      "happiness",
+      "question",
+      "telephone",
+      "butterfly"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Punctuation marks are symbols used in writing to clarify meaning and separate structural units. The three punctuation marks are comma, semicolon, and period. Other words represent various nouns from different categories but are not punctuation marks."
+  },
+  {
+    "category": "insurance",
+    "words": [
+      "premium",
+      "deductible",
+      "liability",
+      "underwriting",
+      "actuary",
+      "reinsurance",
+      "annuity",
+      "telescope",
+      "bicycle",
+      "chemistry",
+      "restaurant",
+      "symphony",
+      "archaeology",
+      "volleyball",
+      "journalism"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Insurance words range from common terms (premium, deductible, liability) to more specialized industry terms (underwriting, actuary, reinsurance, annuity). Non-insurance words span various categories including objects, sciences, and activities."
+  },
+  {
+    "category": "musical_instruments_with_strings",
+    "words": [
+      "violin",
+      "trumpet",
+      "guitar",
+      "drums",
+      "piano",
+      "flute",
+      "saxophone",
+      "cello",
+      "harmonica",
+      "clarinet",
+      "tuba",
+      "harp",
+      "accordion",
+      "triangle",
+      "xylophone"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Category includes instruments that produce sound through vibrating strings. The three target instruments are violin, guitar, cello, and harp - all clearly string instruments. Other instruments represent wind, brass, and percussion categories for contrast."
+  },
+  {
+    "category": "manipulation",
+    "words": [
+      "coercion",
+      "gaslighting",
+      "exploit",
+      "deceive",
+      "leverage",
+      "orchestrate",
+      "maneuver",
+      "bicycle",
+      "mountain"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included diverse manipulation terms from psychological (gaslighting), physical (maneuver), strategic (orchestrate, leverage), and deceptive (deceive, exploit) contexts. Non-manipulation words are concrete nouns from different categories."
+  },
+  {
+    "category": "vcs",
+    "words": [
+      "git",
+      "subversion",
+      "mercurial",
+      "bazaar",
+      "perforce",
+      "cvs",
+      "bitkeeper",
+      "darcs",
+      "calculator",
+      "bicycle"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Included both popular VCS systems (git, subversion) and less common ones (darcs, bitkeeper). All 8 VCS words are legitimate version control systems used in software development."
+  },
+  {
+    "category": "board_games",
+    "words": [
+      "chess",
+      "monopoly",
+      "scrabble",
+      "violin",
+      "backgammon",
+      "telescope",
+      "checkers",
+      "sandwich",
+      "butterfly",
+      "dominoes",
+      "hurricane",
+      "mathematics"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Board games are physical games played on a board with pieces, cards, or tokens. Included classic strategy games (chess, backgammon, checkers), word games (scrabble), tile games (dominoes), and property games (monopoly). Non-board game words span various categories for contrast."
+  },
+  {
+    "category": "metals",
+    "words": [
+      "iron",
+      "copper",
+      "titanium",
+      "mercury",
+      "aluminum",
+      "tungsten",
+      "butterfly"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included mercury which is liquid at room temperature, and tungsten which is less commonly known but has the highest melting point of all metals"
+  },
+  {
+    "category": "houses",
+    "words": [
+      "mansion",
+      "cottage",
+      "bungalow",
+      "chalet",
+      "townhouse",
+      "elephant"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included diverse house types from luxurious (mansion) to cozy (cottage) to architectural styles (bungalow, chalet) and urban housing (townhouse). Elephant is clearly not a house."
+  },
+  {
+    "category": "coding",
+    "words": [
+      "algorithm",
+      "mountain",
+      "debugging",
+      "elephant",
+      "recursion",
+      "bicycle",
+      "telescope",
+      "ocean",
+      "guitar",
+      "sandwich",
+      "library",
+      "butterfly"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included algorithm (fundamental coding concept), debugging (essential coding activity), and recursion (advanced programming technique). Other words span nature, objects, and everyday items."
+  },
+  {
+    "category": "food",
+    "words": [
+      "pizza",
+      "computer",
+      "quinoa",
+      "bicycle",
+      "sushi",
+      "mountain",
+      "chocolate",
+      "telephone",
+      "avocado",
+      "library",
+      "kimchi",
+      "umbrella",
+      "pencil",
+      "ocean",
+      "butterfly"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Food items include common foods (pizza, sushi, chocolate), a superfood grain (quinoa), and a fermented dish (kimchi). Avocado included as it's commonly eaten as food despite being botanically a fruit."
+  },
+  {
+    "category": "shape",
+    "words": [
+      "triangle",
+      "elephant",
+      "coffee",
+      "mountain",
+      "keyboard",
+      "telescope",
+      "umbrella",
+      "symphony",
+      "bicycle",
+      "hurricane",
+      "photograph"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Triangle is a clear geometric shape with three sides and three angles. The other words span various categories including animals, objects, natural phenomena, and concepts."
+  },
+  {
+    "category": "physics_optics",
+    "words": [
+      "refraction",
+      "bicycle",
+      "polarization",
+      "kitchen",
+      "diffraction",
+      "mountain",
+      "interference",
+      "telescope",
+      "photography",
+      "coherence"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included fundamental optical phenomena (refraction, diffraction, interference, polarization, coherence) which are core concepts in optics. Non-optics words span everyday objects and concepts."
+  },
+  {
+    "category": "linguistics",
+    "words": [
+      "phoneme",
+      "morphology",
+      "telescope",
+      "bicycle",
+      "quantum",
+      "democracy",
+      "hurricane",
+      "photosynthesis",
+      "rectangle",
+      "symphony",
+      "archaeology",
+      "thermometer",
+      "gravity",
+      "molecule",
+      "ecosystem"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Included 'phoneme' (basic unit of sound in language) and 'morphology' (study of word structure and formation) as the two linguistics terms among various words from physics, biology, music, politics, geometry, and other fields"
+  },
+  {
+    "category": "physics_waves",
+    "words": [
+      "amplitude",
+      "frequency",
+      "diffraction",
+      "interference",
+      "polarization",
+      "telescope",
+      "molecule"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included fundamental wave properties (amplitude, frequency), wave phenomena (diffraction, interference), and electromagnetic wave property (polarization). Non-wave words are telescope (optical instrument) and molecule (chemistry/matter)"
+  },
+  {
+    "category": "destruction",
+    "words": [
+      "demolition",
+      "butterfly",
+      "annihilation",
+      "telescope",
+      "devastation",
+      "harmony"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included demolition (controlled destruction), annihilation (complete destruction), and devastation (widespread destruction). Non-destruction words span nature, science, and abstract concepts."
+  },
+  {
+    "category": "chemistry",
+    "words": [
+      "benzene",
+      "titration",
+      "catalyst",
+      "molarity",
+      "spectroscopy",
+      "polymer",
+      "stoichiometry",
+      "telescope"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included diverse chemistry terms from organic chemistry (benzene), analytical chemistry (titration, spectroscopy), physical chemistry (catalyst, molarity), and general chemistry concepts (polymer, stoichiometry). Telescope is from astronomy/physics."
+  },
+  {
+    "category": "optical_phenomena",
+    "words": [
+      "rainbow",
+      "thunder",
+      "mirage",
+      "volcano",
+      "aurora"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Rainbow and mirage are optical phenomena caused by light refraction/reflection. Thunder is acoustic, volcano is geological, and aurora is electromagnetic (though visually observed, it's not strictly optical in the same sense as light-based phenomena)."
+  },
+  {
+    "category": "apex_predators",
+    "words": [
+      "tiger",
+      "eagle",
+      "shark",
+      "crocodile",
+      "rabbit",
+      "butterfly"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included diverse apex predators from different ecosystems - terrestrial (tiger), aerial (eagle), marine (shark), and semi-aquatic (crocodile). Non-predators are herbivorous rabbit and nectar-feeding butterfly."
+  },
+  {
+    "category": "colors",
+    "words": [
+      "crimson",
+      "elephant",
+      "bicycle",
+      "mountain",
+      "keyboard",
+      "telescope",
+      "butterfly",
+      "sandwich",
+      "library",
+      "thunder",
+      "violin",
+      "hospital",
+      "garden",
+      "photograph"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Crimson is a deep red color. The remaining words span various categories including animals, objects, places, natural phenomena, and concepts to ensure clear distinction from colors."
+  },
+  {
+    "category": "algorithms",
+    "words": [
+      "quicksort",
+      "bicycle",
+      "dijkstra",
+      "mountain",
+      "mergesort",
+      "coffee",
+      "breadth-first-search",
+      "guitar",
+      "telephone",
+      "book",
+      "rainbow",
+      "telescope",
+      "piano"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included common sorting algorithms (quicksort, mergesort), a graph algorithm (dijkstra), and a search algorithm (breadth-first-search). Other words span various categories like objects, nature, and instruments."
+  },
+  {
+    "category": "types_of_fabric",
+    "words": [
+      "cotton",
+      "silk",
+      "denim",
+      "velvet",
+      "leather",
+      "corduroy",
+      "linen",
+      "plastic",
+      "satin",
+      "metal",
+      "tweed",
+      "glass"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Included various textile fabrics (cotton, silk, denim, velvet, corduroy, linen, satin, tweed) alongside non-fabric materials (leather, plastic, metal, glass) for contrast. Category focuses on woven or knitted textile materials used for clothing and furnishing."
+  },
+  {
+    "category": "rhetorical_devices",
+    "words": [
+      "metaphor",
+      "alliteration",
+      "hyperbole",
+      "oxymoron",
+      "irony"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "All five words are rhetorical devices used in literature and speech to create emphasis, meaning, or artistic effect through specific patterns of language"
+  },
+  {
+    "category": "mathematical_operations",
+    "words": [
+      "addition",
+      "telescope",
+      "multiplication",
+      "sandwich",
+      "subtraction",
+      "bicycle",
+      "division",
+      "painting",
+      "exponentiation",
+      "library",
+      "guitar",
+      "mountain",
+      "elephant",
+      "chemistry",
+      "telephone"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Mathematical operations are fundamental arithmetic and algebraic processes used to manipulate numbers. Included basic operations (addition, subtraction, multiplication, division) and one advanced operation (exponentiation). Non-target words span various everyday objects and concepts."
+  },
+  {
+    "category": "types_of_governments",
+    "words": [
+      "democracy",
+      "bicycle",
+      "monarchy",
+      "republic",
+      "sandwich",
+      "oligarchy",
+      "telescope",
+      "mountain",
+      "keyboard",
+      "butterfly",
+      "newspaper",
+      "library"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included four distinct forms of government (democracy, monarchy, republic, oligarchy) mixed with everyday objects and nouns for contrast. Each government type represents a different system of political organization and power distribution."
+  },
+  {
+    "category": "weather_phenomena",
+    "words": [
+      "tornado",
+      "bicycle",
+      "elephant",
+      "mathematics",
+      "sandwich",
+      "library"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Only tornado is a weather phenomenon - a rotating column of air extending from a thunderstorm to the ground. The other words represent transportation, animals, academic subjects, food, and buildings respectively."
+  },
+  {
+    "category": "startups",
+    "words": [
+      "Airbnb",
+      "Stripe",
+      "Dropbox",
+      "Snapchat",
+      "Uber",
+      "Spotify",
+      "Pinterest"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "All seven words are well-known technology startups that began as small companies and scaled rapidly. Includes both companies that are now public (Airbnb, Spotify, Snapchat, Dropbox, Pinterest, Uber) and private (Stripe), representing diverse sectors like ride-sharing, payments, file storage, social media, and music streaming."
+  },
+  {
+    "category": "data_structures",
+    "words": [
+      "array",
+      "bicycle",
+      "stack",
+      "mountain",
+      "queue",
+      "dictionary",
+      "tree",
+      "elephant",
+      "graph",
+      "piano",
+      "heap",
+      "sunset",
+      "trie",
+      "deque",
+      "coffee"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Included common data structures (array, stack, queue) and more specialized ones (trie, deque, heap). Dictionary and tree are included as they are fundamental data structures despite having common non-technical meanings."
+  },
+  {
+    "category": "sound",
+    "words": [
+      "whisper",
+      "thunder",
+      "cacophony",
+      "sizzle",
+      "bicycle"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included a mix of soft sounds (whisper), loud sounds (thunder), complex sounds (cacophony), and onomatopoeia (sizzle). Bicycle is the non-sound word representing a physical object."
+  },
+  {
+    "category": "quantity",
+    "words": [
+      "dozen",
+      "telescope",
+      "multitude",
+      "guitar",
+      "abundance",
+      "piano",
+      "several",
+      "mountain"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Included 'dozen' (specific numerical quantity), 'multitude' (large indefinite quantity), and 'abundance' (plentiful quantity). The remaining words are objects from various categories."
+  },
+  {
+    "category": "construction",
+    "words": [
+      "hammer",
+      "blueprint",
+      "scaffolding",
+      "rebar",
+      "violin",
+      "telescope",
+      "butterfly",
+      "algebra"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Construction words include common tools (hammer), planning materials (blueprint), structural support (scaffolding), and building materials (rebar). Non-construction words span music, science, nature, and mathematics."
+  },
+  {
+    "category": "history",
+    "words": [
+      "Renaissance",
+      "butterfly",
+      "Napoleon",
+      "telescope",
+      "Byzantine",
+      "sandwich",
+      "guitar",
+      "elephant",
+      "mathematics",
+      "volcano",
+      "democracy"
+    ],
+    "num_target": 3,
+    "generation_method": "llm",
+    "notes": "Renaissance (historical period), Napoleon (historical figure), and Byzantine (historical empire) are clearly history-related. Other words span nature, science, food, music, and concepts."
+  },
+  {
+    "category": "chess_pieces",
+    "words": [
+      "knight",
+      "bishop",
+      "castle",
+      "crown",
+      "sword",
+      "horse",
+      "tower",
+      "church",
+      "warrior",
+      "monarch",
+      "fortress",
+      "cathedral",
+      "soldier",
+      "palace",
+      "rook"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Knight and rook are the actual chess pieces, while other words represent objects or concepts that might be associated with medieval themes or chess imagery but are not official chess piece names"
+  },
+  {
+    "category": "look",
+    "words": [
+      "gaze",
+      "chair",
+      "stare",
+      "mountain",
+      "glance",
+      "peek",
+      "bicycle",
+      "observe",
+      "scrutinize",
+      "thunder",
+      "glimpse",
+      "ogle"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included common looking verbs (gaze, stare, glance) and more specific ones (scrutinize, ogle, peek, glimpse). 'Observe' can mean to look carefully or to notice/study something."
+  },
+  {
+    "category": "gemstones",
+    "words": [
+      "diamond",
+      "marble",
+      "emerald",
+      "granite",
+      "sapphire",
+      "concrete",
+      "ruby",
+      "steel",
+      "quartz",
+      "plastic",
+      "aluminum",
+      "topaz",
+      "wood",
+      "copper",
+      "glass"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included precious stones (diamond, emerald, sapphire, ruby) and semi-precious stones (quartz, topaz) as gemstones, contrasted with common materials like metals, construction materials, and synthetic substances"
+  },
+  {
+    "category": "machine_learning",
+    "words": [
+      "regression",
+      "clustering",
+      "backpropagation",
+      "ensemble",
+      "overfitting",
+      "telescope",
+      "bicycle",
+      "symphony"
+    ],
+    "num_target": 5,
+    "generation_method": "llm",
+    "notes": "Included core ML concepts like regression and clustering, technical terms like backpropagation and overfitting, and ensemble methods. Non-ML words are from astronomy, transportation, and music."
+  },
+  {
+    "category": "music_theory",
+    "words": [
+      "cadence",
+      "bicycle",
+      "modulation",
+      "elephant",
+      "chemistry",
+      "laptop",
+      "sandwich"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Included 'cadence' (harmonic progression that provides closure) and 'modulation' (changing from one key to another) as clear music theory terms, with diverse non-musical words from transportation, animals, science, technology, and food categories"
+  },
+  {
+    "category": "communication",
+    "words": [
+      "telephone",
+      "manuscript",
+      "bicycle",
+      "whisper",
+      "guitar",
+      "broadcast",
+      "mountain",
+      "gesture",
+      "telescope",
+      "kitchen",
+      "library",
+      "symphony",
+      "garden",
+      "envelope"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Communication words include telephone (device), whisper (verbal method), broadcast (mass communication), and gesture (non-verbal communication). Other words span transportation, instruments, locations, and objects."
+  },
+  {
+    "category": "storage",
+    "words": [
+      "warehouse",
+      "silo",
+      "cabinet",
+      "vault",
+      "pantry",
+      "attic",
+      "repository",
+      "granary",
+      "bicycle"
+    ],
+    "num_target": 8,
+    "generation_method": "llm",
+    "notes": "Included diverse storage types from large-scale (warehouse, silo) to household (cabinet, pantry, attic) to specialized (vault, repository, granary). Bicycle is the non-storage item."
+  },
+  {
+    "category": "meteorological_phenomena",
+    "words": [
+      "tornado",
+      "hurricane",
+      "blizzard",
+      "rainbow",
+      "drought",
+      "tsunami",
+      "thunderstorm"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included various weather events and atmospheric phenomena. Tsunami is the outlier as it's a geological/oceanic phenomenon caused by seismic activity, not meteorological processes."
+  },
+  {
+    "category": "literary_devices",
+    "words": [
+      "metaphor",
+      "alliteration",
+      "sunshine",
+      "irony",
+      "personification",
+      "bicycle",
+      "hyperbole",
+      "synecdoche",
+      "telephone"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Literary devices are techniques writers use to create special effects or convey meaning. Included common devices like metaphor and alliteration, more complex ones like synecdoche, and contrasted with everyday objects that are not literary techniques."
+  },
+  {
+    "category": "chemical_elements",
+    "words": [
+      "oxygen",
+      "democracy",
+      "telephone",
+      "basketball",
+      "mountain",
+      "painting",
+      "literature",
+      "happiness",
+      "computer",
+      "friendship",
+      "music",
+      "education",
+      "transportation",
+      "celebration",
+      "architecture"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Only oxygen is a chemical element from the periodic table. All other words represent concepts, objects, activities, or abstract ideas that are not chemical elements."
+  },
+  {
+    "category": "cats",
+    "words": [
+      "Persian",
+      "Siamese",
+      "tabby",
+      "calico",
+      "Maine Coon",
+      "Ragdoll",
+      "Abyssinian",
+      "elephant"
+    ],
+    "num_target": 7,
+    "generation_method": "llm",
+    "notes": "Included various cat breeds from common (tabby, calico) to purebred varieties (Persian, Siamese, Maine Coon, Ragdoll, Abyssinian). All are clearly feline-related terms."
+  },
+  {
+    "category": "types_of_pasta",
+    "words": [
+      "spaghetti",
+      "lasagna",
+      "penne",
+      "ravioli",
+      "bicycle",
+      "mountain",
+      "telephone",
+      "butterfly",
+      "dictionary",
+      "thunder",
+      "elephant",
+      "photograph",
+      "symphony"
+    ],
+    "num_target": 4,
+    "generation_method": "llm",
+    "notes": "Included common pasta shapes (spaghetti, penne), stuffed pasta (ravioli), and sheet pasta (lasagna) as the target category, with diverse non-food words as distractors"
+  },
+  {
+    "category": "constellations",
+    "words": [
+      "orion",
+      "telescope",
+      "jupiter",
+      "cassiopeia",
+      "meteor",
+      "galaxy",
+      "satellite",
+      "comet",
+      "nebula",
+      "asteroid"
+    ],
+    "num_target": 2,
+    "generation_method": "llm",
+    "notes": "Constellations are specific star patterns recognized in astronomy. Orion and Cassiopeia are well-known constellations, while the other words are various astronomical objects and instruments that are not constellations."
+  },
+  {
+    "category": "real_estate",
+    "words": [
+      "mortgage",
+      "bicycle",
+      "appraisal",
+      "telescope",
+      "escrow",
+      "sandwich",
+      "duplex",
+      "guitar",
+      "foreclosure",
+      "butterfly",
+      "easement",
+      "notebook",
+      "subdivision",
+      "piano",
+      "zoning"
+    ],
+    "num_target": 6,
+    "generation_method": "llm",
+    "notes": "Included diverse real estate terms: mortgage (financing), appraisal (valuation), escrow (transaction process), duplex (property type), foreclosure (legal process), easement (property rights), subdivision (development), and zoning (regulation). Mixed with common non-real estate items."
+  },
+  {
+    "category": "linear_algebra",
+    "words": [
+      "eigenvalue",
+      "butterfly",
+      "telescope",
+      "sandwich",
+      "mountain",
+      "keyboard",
+      "umbrella",
+      "bicycle",
+      "chocolate",
+      "newspaper",
+      "telephone",
+      "guitar",
+      "elephant",
+      "refrigerator"
+    ],
+    "num_target": 1,
+    "generation_method": "llm",
+    "notes": "Eigenvalue is a fundamental concept in linear algebra referring to scalar values associated with linear transformations. The remaining 13 words are from diverse categories including animals, objects, food, and instruments."
+  }
+]

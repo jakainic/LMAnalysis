@@ -1,17 +1,18 @@
 # Data generation configuration
 output_dir: "data"
+data_file: "systematic_examples.json"  # Single data file used across all components
 
 # List generation parameters
 min_list_length: 5
 max_list_length: 15
 min_target_words: 1
 max_target_words: 8
-num_examples: 3000
+num_examples: 100
 
 # Method proportions (must sum to 1.0)
 method_proportions:
-  systematic: 0.7
-  llm: 0.3
+  systematic: 0
+  llm: 1
 
 # Deduplication settings
 deduplication:
@@ -21,10 +22,10 @@ deduplication:
 
 # LLM configuration for data generation
 llm:
-  model: "claude-3-sonnet-20240229"  # or "gpt-4-turbo-preview"
+  model: "claude-sonnet-4-20250514"  # or "gpt-4-turbo-preview"
   max_tokens: 1000
   temperature: 0.7
-  custom_category_probability: 0.3  # Probability of LLM choosing its own category
+  custom_category_probability: 0.4  # Probability of LLM choosing its own category
 
 # Validation configuration
 validation:
@@ -38,23 +39,15 @@ benchmarking:
     - bigscience/bloom-1b1
     - EleutherAI/pythia-410m
     - facebook/opt-1.3b
-    # - "meta-llama/Llama-2-7b-hf"
-    # - "Qwen/Qwen-7B"
-    # - "mistralai/Mistral-7B-v0.1"
+    - mistralai/Mistral-7B-Instruct-v0.1
   use_fp16: true
   batch_size: 1   # Process one example at a time
+  output_dir: "/content/drive/MyDrive/CBAI/CBAI/benchmarking"  # Output directory for benchmarking results
 
 # Mediation analysis configuration
 mediation:
-  model: bigscience/bloom-1b1
+  model: mistralai/Mistral-7B-Instruct-v0.1
   use_fp16: true  # Use half precision for faster inference
-  num_list_pairs: 10  # Number of similar list pairs to analyze
+  num_list_pairs: 50  # Number of similar list pairs to analyze
   token_positions: null  # Specific token positions to analyze (null for all positions)
-  categories:
-    - fruit  # Categories to use for analysis
-    - music_instruments
-    - furniture
-    - colors
-    - minerals
-    - history
-    - weather
+  output_dir: "/content/drive/MyDrive/CBAI/CBAI/causal_mediation"  # Output directory for mediation analysis

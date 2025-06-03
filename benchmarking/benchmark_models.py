@@ -59,30 +59,27 @@ class ModelBenchmarker:
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print(f"\nUsing device: {self.device}")
         
-        # Get the absolute path to the data file
-        data_path = Path(__file__).parent.parent / self.config['output_dir'] / 'examples.json'
-        print(f"Looking for data at: {data_path}")
+        # Load test data
+        data_path = Path(__file__).parent.parent / self.config['output_dir'] / self.config['data_file']
         
-        # Try alternative paths if the first one doesn't exist
-        if not data_path.exists():
-            alt_paths = [
-                Path('/content/drive/MyDrive/CBAI/data/examples.json'),
-                Path('/content/drive/MyDrive/CBAI/CBAI/data/examples.json'),
-                Path('data/examples.json'),
-                Path('../data/examples.json')
-            ]
-            for path in alt_paths:
-                print(f"Trying alternative path: {path}")
-                if path.exists():
-                    print(f"Found data at: {path}")
-                    data_path = path
-                    break
-            else:
-                raise FileNotFoundError(
-                    f"Could not find examples.json. Tried paths:\n" +
-                    f"1. {data_path}\n" +
-                    "\n".join(f"{i+2}. {path}" for i, path in enumerate(alt_paths))
-                )
+        # Try different possible paths for the data file
+        possible_paths = [
+            data_path,
+            Path('/content/drive/MyDrive/CBAI/data') / self.config['data_file'],
+            Path('/content/drive/MyDrive/CBAI/CBAI/data') / self.config['data_file'],
+            Path('data') / self.config['data_file'],
+            Path('../data') / self.config['data_file']
+        ]
+        
+        for path in possible_paths:
+            if path.exists():
+                data_path = path
+                break
+        else:
+            raise FileNotFoundError(
+                f"Could not find {self.config['data_file']}. Tried paths:\n" +
+                "\n".join(str(p) for p in possible_paths)
+            )
         
         with open(data_path, 'r', encoding='utf-8') as f:
             self.data = json.load(f)
@@ -90,6 +87,9 @@ class ModelBenchmarker:
         # Initialize models and tokenizers
         self.models = {}
         self.tokenizers = {}
+        
+        # Track loaded model configs to prevent duplicates
+        loaded_model_configs = set()
         
         # Validate Hugging Face login
         try:
@@ -100,47 +100,44 @@ class ModelBenchmarker:
             print("huggingface-cli login")
             raise ValueError("Not logged in to Hugging Face")
         
+        # Load each model specified in the config
         for model_name in self.config['benchmarking']['models']:
             print(f"\nLoading model: {model_name}")
             try:
-                # Common model loading parameters with optimizations
-                model_kwargs = {
-                    'torch_dtype': torch.float16 if self.config['benchmarking']['use_fp16'] else torch.float32,
-                    'device_map': "auto",
-                    'trust_remote_code': True,
-                    'use_safetensors': True,
-                    'low_cpu_mem_usage': True,
-                    'offload_folder': "offload",  # Offload weights to disk if needed
-                    'offload_state_dict': True,  # Offload state dict to CPU
-                    'max_memory': {0: "8GiB"},  # Limit GPU memory usage
-                }
+                # Load tokenizer
+                self.tokenizers[model_name] = AutoTokenizer.from_pretrained(model_name)
                 
-                # Add token if model requires authentication
-                if any(restricted in model_name.lower() for restricted in ['llama', 'gpt', 'mistral', 'qwen']):
-                    model_kwargs['token'] = True  # Use logged-in token
+                # Determine if we need quantization based on model size
+                needs_quantization = any(large_model in model_name.lower() for large_model in [
+                    'mistral', 'llama', 'falcon', 'mpt', 'gpt-j', 'gpt-neox', 'opt-6.7b', 'opt-13b'
+                ])
                 
-                # Load model with appropriate settings
-                self.models[model_name] = AutoModelForCausalLM.from_pretrained(
-                    model_name,
-                    **model_kwargs
-                )
+                if needs_quantization:
+                    print(f"Using 4-bit quantization for large model: {model_name}")
+                    self.models[model_name] = AutoModelForCausalLM.from_pretrained(
+                        model_name,
+                        torch_dtype=torch.float16,
+                        load_in_4bit=True,
+                        device_map="auto"
+                    )
+                else:
+                    # For smaller models, use regular loading
+                    self.models[model_name] = AutoModelForCausalLM.from_pretrained(
+                        model_name,
+                        torch_dtype=torch.float32,
+                        device_map="auto"
+                    )
                 
-                # Common tokenizer parameters
-                tokenizer_kwargs = {
-                    'trust_remote_code': True,
-                    'use_fast': True,
-                    'model_max_length': 2048,  # Limit context length for faster processing
-                }
+                # Verify model uniqueness
+                model_config = self.models[model_name].config.to_dict()
+                # Create a simple string representation of key config parameters
+                model_config_str = f"{model_name}_{model_config.get('model_type', '')}_{model_config.get('vocab_size', 0)}_{model_config.get('hidden_size', 0)}"
+                if model_config_str in loaded_model_configs:
+                    raise ValueError(f"Duplicate model configuration detected for {model_name}")
+                loaded_model_configs.add(model_config_str)
                 
-                # Add token if model requires authentication
-                if any(restricted in model_name.lower() for restricted in ['llama', 'gpt', 'mistral', 'qwen']):
-                    tokenizer_kwargs['token'] = True  # Use logged-in token
-                
-                # Load tokenizer with appropriate settings
-                self.tokenizers[model_name] = AutoTokenizer.from_pretrained(
-                    model_name,
-                    **tokenizer_kwargs
-                )
+                # Store model
+                self.models[model_name] = self.models[model_name]
                 
                 # Set up padding token if not present
                 if self.tokenizers[model_name].pad_token is None:
@@ -150,94 +147,162 @@ class ModelBenchmarker:
                         self.tokenizers[model_name].pad_token = '[PAD]'
                         self.tokenizers[model_name].add_special_tokens({'pad_token': '[PAD]'})
                 
-                print(f"Successfully loaded {model_name}")
-            except ImportError as e:
-                print(f"\nMissing required package: {str(e)}")
-                print("Please install it using:")
-                print("pip install 'accelerate>=0.26.0'")
-                raise
+                print(f"Successfully loaded model: {model_name}")
             except Exception as e:
-                print(f"\nError loading model {model_name}:")
-                print(f"Error type: {type(e).__name__}")
-                print(f"Error message: {str(e)}")
-                print("\nPossible solutions:")
-                print("1. Check if you have access to the model on Hugging Face")
-                print("2. Try running: huggingface-cli login")
-                print("3. Check if you have enough disk space and memory")
-                print("4. Check if the model name is correct and exists")
-                print("5. Make sure all required packages are installed:")
-                print("   pip install 'accelerate>=0.26.0'")
+                print(f"Error loading model {model_name}: {str(e)}")
                 raise
     
     def format_prompt(self, words: List[str], category: str) -> str:
         """Format the prompt for the model."""
-        return f"""Given this list of words: {words}
-How many words in this list belong to the category '{category}'?
-Answer with a single number between 0 and {len(words)}.
+        return f"""Task: Count how many words in a list belong to a specific category.
+
+List: {words}
+Category: {category}
+
+Count the number of words that belong to the category '{category}'.
+Your answer should be a single number.
 
 Answer:"""
 
-    def get_model_prediction(self, model_name: str, prompt: str) -> int:
-        """Get prediction from the model."""
+    def get_model_prediction(self, model_name: str, prompt: str) -> Tuple[int, Dict]:
+        """Get prediction from the model and return both the prediction and raw response."""
         tokenizer = self.tokenizers[model_name]
         model = self.models[model_name]
         
-        # Tokenize input
+        # Check model's context length
+        max_length = getattr(model.config, 'max_position_embeddings', None)
+        if max_length is None:
+            # Try to get from model config
+            max_length = getattr(model.config, 'n_positions', None)
+        if max_length is None:
+            # Default to a conservative value if we can't determine
+            max_length = 2048
+        
+        # Tokenize input to check length
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        input_length = inputs['input_ids'].shape[1]
+        
+        # Add some buffer for the response (e.g., 100 tokens)
+        if input_length + 100 > max_length:
+            print(f"Warning: Input length {input_length} + response buffer exceeds model's max context length {max_length}")
+            return -1, {
+                'model': model_name,
+                'prompt': prompt,
+                'raw_output': None,
+                'input_tokens': tokenizer.convert_ids_to_tokens(inputs['input_ids'][0]),
+                'output_tokens': None,
+                'input_shape': inputs['input_ids'].shape,
+                'output_shape': None,
+                'error': 'context_length_exceeded'
+            }
+        
+        # Common generation parameters for all models
+        gen_kwargs = {
+            'max_new_tokens': 5,  # Reduced from 10 to 5 since we only need a number
+            'num_return_sequences': 1,
+            'pad_token_id': tokenizer.eos_token_id,
+            'eos_token_id': tokenizer.eos_token_id,
+            'forced_eos_token_id': tokenizer.eos_token_id,
+            'no_repeat_ngram_size': 3,
+        }
+        
+        # Add temperature only for models that support it
+        if model_name.startswith(('EleutherAI/pythia', 'facebook/opt', 'mistralai')):
+            gen_kwargs['do_sample'] = True  # Need to enable sampling for temperature
+            gen_kwargs['temperature'] = 0.1  # Set small for more deterministic outputs
+        elif model_name.startswith('bigscience/bloom'):
+            # BLOOM doesn't support temperature, use do_sample=False for deterministic outputs
+            gen_kwargs['do_sample'] = False
         
         # Generate
         with torch.no_grad():
             outputs = model.generate(
                 **inputs,
-                max_new_tokens=3,  # We only need a small number for the answer
-                do_sample=False,   # No sampling for deterministic results
-                num_return_sequences=1,
-                pad_token_id=tokenizer.eos_token_id,
-                eos_token_id=tokenizer.eos_token_id,
-                forced_eos_token_id=tokenizer.eos_token_id,  # Force EOS after generation
-                no_repeat_ngram_size=3,  # Prevent repetition
-                bad_words_ids=[[tokenizer.encode("Answer:")[0]]]  # Prevent model from starting a new answer
+                **gen_kwargs
             )
         
-        # Decode and extract the number
+        # Decode the response
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
         
-        # Debug logging for problematic responses
-        if not any(c.isdigit() for c in response):
-            print(f"\nWarning: No number found in response:")
-            print(f"Prompt: {prompt}")
-            print(f"Response: {response}")
+        # Create raw response object
+        raw_response = {
+            'model': model_name,
+            'prompt': prompt,
+            'raw_output': response,
+            'input_tokens': tokenizer.convert_ids_to_tokens(inputs['input_ids'][0]),
+            'output_tokens': tokenizer.convert_ids_to_tokens(outputs[0]),
+            'input_shape': inputs['input_ids'].shape,
+            'output_shape': outputs.shape,
+            'context_length': {
+                'max': max_length,
+                'input': input_length,
+                'output': outputs.shape[1]
+            }
+        }
         
-        # Extract just the number from the response
+        # Extract number from response
+        prediction = self._extract_number_from_response(response, prompt)
+        raw_response['extracted_prediction'] = prediction
+        
+        return prediction, raw_response
+
+    def _extract_number_from_response(self, response: str, prompt: str) -> int:
+        """Extract a number from the model's response.
+        
+        The model's response is defined as everything after the prompt.
+        We look for the first number in the response.
+        """
         try:
-            # Find the last number in the response
-            words = response.split()
-            for word in reversed(words):
+            # Find where the prompt ends in the response
+            prompt_words = prompt.split()
+            response_words = response.split()
+            
+            # Find the prompt end index
+            prompt_end_idx = -1
+            for i in range(len(response_words) - len(prompt_words) + 1):
+                if response_words[i:i+len(prompt_words)] == prompt_words:
+                    prompt_end_idx = i + len(prompt_words)
+                    break
+            
+            if prompt_end_idx == -1:
+                return -1  # Couldn't find where the prompt ends
+            
+            # Look for the first number in the response (after the prompt)
+            for word in response_words[prompt_end_idx:]:
                 # Remove any punctuation and try to convert to int
                 clean_word = ''.join(c for c in word if c.isdigit())
                 if clean_word:
-                    prediction = int(clean_word)
-                    return prediction
-            return -1  # No number found
+                    return int(clean_word)
+            
+            return -1  # No number found in the response
+            
         except Exception as e:
-            print(f"Error parsing response: {str(e)}")
-            print(f"Raw response: {response}")
-            return -1  # Error in parsing
+            print(f"Error extracting number: {str(e)}")
+            return -1
 
     def get_model_predictions_batch(self, model_name: str, prompts: List[str], batch_size: int = 8) -> List[int]:
         """Get predictions from model in batches."""
         predictions = []
+        raw_responses = []  # Store all raw responses
+        
         for i in range(0, len(prompts), batch_size):
             batch_prompts = prompts[i:i + batch_size]
             
             # Process each prompt individually to ensure correct model usage
             for prompt in batch_prompts:
-                prediction = self.get_model_prediction(model_name, prompt)
+                prediction, raw_response = self.get_model_prediction(model_name, prompt)
                 predictions.append(prediction)
+                raw_responses.append(raw_response)
             
             # Clear CUDA cache if using GPU
             if self.device == 'cuda':
                 torch.cuda.empty_cache()
+        
+        # Save raw responses to file
+        output_dir = Path(self.config['output_dir'])
+        raw_responses_file = output_dir / f'raw_responses_{model_name.replace("/", "_")}.json'
+        with open(raw_responses_file, 'w') as f:
+            json.dump(raw_responses, f, indent=2)
         
         return predictions
     

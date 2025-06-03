@@ -22,13 +22,32 @@ class ActivationPatching:
         # Initialize model and tokenizer
         self.model_name = self.config['mediation']['model']
         print(f"Loading model: {self.model_name}")
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            torch_dtype=torch.float32,  # Force FP32 for compatibility
-            device_map="auto",
-            output_hidden_states=True  # We need hidden states for analysis
-        )
+        
+        # Load tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        
+        # Determine if we need quantization based on model size
+        needs_quantization = any(large_model in self.model_name.lower() for large_model in [
+            'mistral', 'llama', 'falcon', 'mpt', 'gpt-j', 'gpt-neox', 'opt-6.7b', 'opt-13b'
+        ])
+        
+        if needs_quantization:
+            print(f"Using 4-bit quantization for large model: {self.model_name}")
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_name,
+                torch_dtype=torch.float16,
+                load_in_4bit=True,
+                device_map="auto",
+                output_hidden_states=True  # We need hidden states for analysis
+            )
+        else:
+            # For smaller models, use regular loading
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_name,
+                torch_dtype=torch.float32,
+                device_map="auto",
+                output_hidden_states=True  # We need hidden states for analysis
+            )
         
         # Store hooks for activation patching
         self.hooks = []
@@ -40,13 +59,25 @@ class ActivationPatching:
             self.activations[f"layer_{layer_idx}"] = output.detach()
         return hook
     
+    def _get_model_layers(self):
+        """Get the layers of the model, handling different architectures."""
+        if hasattr(self.model, 'transformer'):
+            # BLOOM, OPT style
+            return self.model.transformer.h
+        elif hasattr(self.model, 'model'):
+            # Mistral, LLaMA style
+            return self.model.model.layers
+        else:
+            raise ValueError(f"Unsupported model architecture: {self.model.__class__.__name__}")
+    
     def register_hooks(self, layer_idx: int):
         """Register hooks for a specific layer."""
         # Clear previous hooks
         self.remove_hooks()
         
-        # Get the layer we want to patch (BLOOM specific)
-        layer = self.model.transformer.h[layer_idx]
+        # Get the layer we want to patch
+        layers = self._get_model_layers()
+        layer = layers[layer_idx]
         
         # Register hook for the layer's output
         hook = layer.register_forward_hook(self._get_activation_hook(layer_idx))
@@ -61,9 +92,15 @@ class ActivationPatching:
     
     def format_prompt(self, words: List[str], category: str) -> str:
         """Format the prompt for the model."""
-        return f"""Given this list of words: {words}
-How many words in this list belong to the category '{category}'?
-Answer with just a number."""
+        return f"""Task: Count how many words in a list belong to a specific category.
+
+List: {words}
+Category: {category}
+
+Count the number of words that belong to the category '{category}'.
+Your answer should be a single number.
+
+Answer:"""
     
     def get_model_prediction(self, prompt: str) -> Tuple[int, Dict[str, torch.Tensor]]:
         """Get prediction and activations from the model."""
@@ -73,27 +110,87 @@ Answer with just a number."""
         # Forward pass
         with torch.no_grad():
             outputs = self.model(**inputs, output_hidden_states=True)
-        
-        # Get prediction
-        logits = outputs.logits[0]
-        # Get the most likely token IDs
-        token_ids = logits.argmax(dim=-1)
-        # Ensure token_ids is a tensor
-        if isinstance(token_ids, list):
-            token_ids = torch.tensor(token_ids)
-        response = self.tokenizer.decode(token_ids, skip_special_tokens=True)
-        
-        try:
-            # Find the last number in the response
-            words = response.split()
-            for word in reversed(words):
-                if word.isdigit():
-                    prediction = int(word)
-                    break
+            
+            # Set up generation parameters based on model type
+            gen_kwargs = {
+                'max_new_tokens': 5,
+                'num_return_sequences': 1,
+                'pad_token_id': self.tokenizer.eos_token_id,
+                'eos_token_id': self.tokenizer.eos_token_id,
+                'forced_eos_token_id': self.tokenizer.eos_token_id,
+                'no_repeat_ngram_size': 3,
+            }
+            
+            # Add temperature only for models that support it
+            if self.model_name.startswith(('EleutherAI/pythia', 'facebook/opt', 'mistralai')):
+                gen_kwargs['do_sample'] = True
+                gen_kwargs['temperature'] = 0.1
             else:
+                # BLOOM doesn't support temperature, use do_sample=False for deterministic outputs
+                gen_kwargs['do_sample'] = False
+            
+            # Generate prediction
+            gen_outputs = self.model.generate(
+                **inputs,
+                **gen_kwargs
+            )
+            
+            # Decode the response - handle the output format correctly
+            if hasattr(gen_outputs, 'sequences'):  # If it's a GenerateDecoderOnlyOutput
+                token_ids = gen_outputs.sequences
+            elif isinstance(gen_outputs, torch.Tensor):
+                token_ids = gen_outputs
+            else:
+                # If it's a list or other format, convert to tensor first
+                token_ids = torch.tensor(gen_outputs)
+            
+            # Ensure we have a 2D tensor
+            if token_ids.dim() == 1:
+                token_ids = token_ids.unsqueeze(0)
+            
+            # Decode the response
+            response = self.tokenizer.decode(token_ids[0], skip_special_tokens=True)
+            
+            print(f"\nDebug - Prompt: {prompt}")
+            print(f"Debug - Raw response: {response}")
+            
+            # Extract prediction using the same method as test file
+            try:
+                # Find where the prompt ends in the response
+                prompt_words = prompt.split()
+                response_words = response.split()
+                
+                print(f"Debug - Prompt words: {prompt_words}")
+                print(f"Debug - Response words: {response_words}")
+                
+                # Find the prompt end index
+                prompt_end_idx = -1
+                for i in range(len(response_words) - len(prompt_words) + 1):
+                    if response_words[i:i+len(prompt_words)] == prompt_words:
+                        prompt_end_idx = i + len(prompt_words)
+                        break
+                
+                print(f"Debug - Prompt end index: {prompt_end_idx}")
+                
+                if prompt_end_idx == -1:
+                    print("Debug - Couldn't find where the prompt ends")
+                    prediction = -1  # Couldn't find where the prompt ends
+                else:
+                    # Look for the first number in the response (after the prompt)
+                    print(f"Debug - Looking for numbers in: {response_words[prompt_end_idx:]}")
+                    for word in response_words[prompt_end_idx:]:
+                        # Remove any punctuation and try to convert to int
+                        clean_word = ''.join(c for c in word if c.isdigit())
+                        if clean_word:
+                            prediction = int(clean_word)
+                            print(f"Debug - Found number: {prediction}")
+                            break
+                    else:
+                        print("Debug - No number found in response")
+                        prediction = -1  # No number found in the response
+            except Exception as e:
+                print(f"Debug - Error extracting number: {str(e)}")
                 prediction = -1
-        except:
-            prediction = -1
         
         # Get activations for each layer
         activations = {
@@ -126,19 +223,48 @@ Answer with just a number."""
     def run_mediation_analysis(self, 
                              list_a: List[str],
                              list_b: List[str],
-                             category: str,
+                             category_a: str,
+                             category_b: str,
                              layer_idx: int,
                              token_positions: Optional[List[int]] = None) -> Dict:
         """Run mediation analysis for a specific layer and token positions."""
         # Get original predictions and activations
-        prompt_a = self.format_prompt(list_a, category)
-        prompt_b = self.format_prompt(list_b, category)
+        prompt_a = self.format_prompt(list_a, category_a)
+        prompt_b = self.format_prompt(list_b, category_b)
+        
+        print(f"\nAnalyzing layer {layer_idx}")
+        print(f"List A: {list_a} (Category: {category_a})")
+        print(f"List B: {list_b} (Category: {category_b})")
         
         pred_a, acts_a = self.get_model_prediction(prompt_a)
         pred_b, acts_b = self.get_model_prediction(prompt_b)
         
-        # Calculate total effect
-        total_effect = abs(pred_b - pred_a)
+        print(f"\nOriginal predictions:")
+        print(f"List A prediction: {pred_a}")
+        print(f"List B prediction: {pred_b}")
+        
+        # Calculate total effect (preserving direction)
+        total_effect = pred_b - pred_a
+        print(f"Total effect: {total_effect}")
+        
+        if total_effect == 0:
+            print("Warning: Total effect is 0, skipping layer analysis")
+            return {
+                'total_effect': 0,
+                'direct_effect': 0,
+                'indirect_effect': 0,
+                'proportion_mediated': 0,
+                'original_predictions': {
+                    'list_a': pred_a,
+                    'list_b': pred_b,
+                    'patched': None
+                },
+                'diagnostics': {
+                    'error': 'zero_total_effect',
+                    'prompt_a': prompt_a,
+                    'prompt_b': prompt_b
+                }
+            }
         
         # Patch activations and get patched prediction
         patched_acts = self.patch_activations(acts_a, acts_b, layer_idx, token_positions)
@@ -148,14 +274,28 @@ Answer with just a number."""
         
         # Create a custom forward pass that uses patched activations
         def custom_forward(*args, **kwargs):
-            outputs = self.model.transformer(*args, **kwargs)
-            # Convert hidden states tuple to list for modification
-            hidden_states = list(outputs.hidden_states)
-            # Replace the layer's activations
-            hidden_states[layer_idx] = patched_acts[f"layer_{layer_idx}"]
-            # Convert back to tuple
-            outputs.hidden_states = tuple(hidden_states)
-            return outputs
+            if hasattr(self.model, 'transformer'):
+                # BLOOM, OPT style
+                outputs = self.model.transformer(*args, **kwargs)
+                # Convert hidden states tuple to list for modification
+                hidden_states = list(outputs.hidden_states)
+                # Replace the layer's activations
+                hidden_states[layer_idx] = patched_acts[f"layer_{layer_idx}"]
+                # Convert back to tuple
+                outputs.hidden_states = tuple(hidden_states)
+                return outputs
+            elif hasattr(self.model, 'model'):
+                # Mistral, LLaMA style
+                outputs = self.model.model(*args, **kwargs)
+                # Convert hidden states tuple to list for modification
+                hidden_states = list(outputs.hidden_states)
+                # Replace the layer's activations
+                hidden_states[layer_idx] = patched_acts[f"layer_{layer_idx}"]
+                # Convert back to tuple
+                outputs.hidden_states = tuple(hidden_states)
+                return outputs
+            else:
+                raise ValueError(f"Unsupported model architecture: {self.model.__class__.__name__}")
         
         with torch.no_grad():
             # Run the model with our custom forward pass
@@ -199,12 +339,19 @@ Answer with just a number."""
         except:
             patched_pred = -1
         
-        # Calculate direct and indirect effects
-        direct_effect = abs(patched_pred - pred_a)
-        indirect_effect = abs(pred_b - patched_pred)
+        print(f"\nPatched prediction: {patched_pred}")
+        print(f"Patched response: {patched_response}")
+        
+        # Calculate direct and indirect effects (preserving direction)
+        direct_effect = patched_pred - pred_a
+        indirect_effect = pred_b - patched_pred
+        
+        print(f"Direct effect: {direct_effect}")
+        print(f"Indirect effect: {indirect_effect}")
         
         # Calculate proportion mediated
         proportion_mediated = indirect_effect / total_effect if total_effect != 0 else 0
+        print(f"Proportion mediated: {proportion_mediated}")
         
         return {
             'total_effect': total_effect,
@@ -215,136 +362,256 @@ Answer with just a number."""
                 'list_a': pred_a,
                 'list_b': pred_b,
                 'patched': patched_pred
+            },
+            'diagnostics': {
+                'prompt_a': prompt_a,
+                'prompt_b': prompt_b,
+                'patched_response': patched_response,
+                'token_positions': token_positions
             }
         }
     
     def analyze_layer_importance(self, 
-                               list_pairs: List[Tuple[List[str], List[str]]],
-                               category: str,
+                               list_pairs: List[Tuple[List[str], List[str], str, str]],
                                token_positions: Optional[List[int]] = None) -> Dict:
         """Analyze the importance of each layer for running count representation."""
         results = {}
+        diagnostics = {
+            'zero_effect_pairs': [],
+            'invalid_predictions': [],
+            'layer_stats': defaultdict(lambda: {
+                'total_pairs': 0,
+                'valid_pairs': 0,
+                'zero_effect_pairs': 0,
+                'invalid_predictions': 0
+            })
+        }
         
-        # Get number of layers (BLOOM specific)
-        num_layers = len(self.model.transformer.h)
+        # Get number of layers
+        num_layers = len(self._get_model_layers())
+        print(f"\nAnalyzing {len(list_pairs)} pairs")
+        print(f"Number of layers: {num_layers}")
         
         for layer_idx in tqdm(range(num_layers), desc="Analyzing layers"):
             layer_results = []
+            layer_diagnostics = diagnostics['layer_stats'][layer_idx]
             
-            for list_a, list_b in list_pairs:
+            for pair_idx, (list_a, list_b, category_a, category_b) in enumerate(list_pairs):
                 result = self.run_mediation_analysis(
-                    list_a, list_b, category, layer_idx, token_positions
+                    list_a, list_b, category_a, category_b, layer_idx, token_positions
                 )
+                
+                # Track statistics
+                layer_diagnostics['total_pairs'] += 1
+                
+                # Check for zero total effect
+                if result['total_effect'] == 0:
+                    layer_diagnostics['zero_effect_pairs'] += 1
+                    diagnostics['zero_effect_pairs'].append({
+                        'layer': layer_idx,
+                        'pair_idx': pair_idx,
+                        'list_a': list_a,
+                        'list_b': list_b,
+                        'category_a': category_a,
+                        'category_b': category_b,
+                        'predictions': result['original_predictions']
+                    })
+                    continue
+                
+                # Check for invalid predictions
+                if result['original_predictions']['patched'] == -1:
+                    layer_diagnostics['invalid_predictions'] += 1
+                    diagnostics['invalid_predictions'].append({
+                        'layer': layer_idx,
+                        'pair_idx': pair_idx,
+                        'list_a': list_a,
+                        'list_b': list_b,
+                        'category_a': category_a,
+                        'category_b': category_b,
+                        'predictions': result['original_predictions']
+                    })
+                    continue
+                
+                layer_diagnostics['valid_pairs'] += 1
                 layer_results.append(result)
             
             # Aggregate results for this layer
-            results[layer_idx] = {
-                'mean_proportion_mediated': np.mean([r['proportion_mediated'] for r in layer_results]),
-                'std_proportion_mediated': np.std([r['proportion_mediated'] for r in layer_results]),
-                'mean_indirect_effect': np.mean([r['indirect_effect'] for r in layer_results]),
-                'std_indirect_effect': np.std([r['indirect_effect'] for r in layer_results]),
-                'individual_results': layer_results
-            }
+            if layer_results:
+                results[layer_idx] = {
+                    'mean_proportion_mediated': np.mean([r['proportion_mediated'] for r in layer_results]),
+                    'std_proportion_mediated': np.std([r['proportion_mediated'] for r in layer_results]),
+                    'mean_indirect_effect': np.mean([r['indirect_effect'] for r in layer_results]),
+                    'std_indirect_effect': np.std([r['indirect_effect'] for r in layer_results]),
+                    'individual_results': layer_results
+                }
+            else:
+                results[layer_idx] = {
+                    'mean_proportion_mediated': 0,
+                    'std_proportion_mediated': 0,
+                    'mean_indirect_effect': 0,
+                    'std_indirect_effect': 0,
+                    'individual_results': []
+                }
+        
+        # Print diagnostic summary
+        print("\nDiagnostic Summary:")
+        print("-" * 50)
+        print(f"Total pairs analyzed: {len(list_pairs)}")
+        print(f"Pairs with zero total effect: {len(diagnostics['zero_effect_pairs'])}")
+        print(f"Pairs with invalid predictions: {len(diagnostics['invalid_predictions'])}")
+        print("\nLayer-wise statistics:")
+        for layer_idx in range(num_layers):
+            stats = diagnostics['layer_stats'][layer_idx]
+            print(f"\nLayer {layer_idx}:")
+            print(f"  Total pairs: {stats['total_pairs']}")
+            print(f"  Valid pairs: {stats['valid_pairs']}")
+            print(f"  Zero effect pairs: {stats['zero_effect_pairs']}")
+            print(f"  Invalid predictions: {stats['invalid_predictions']}")
+        
+        # Add diagnostics to results
+        results['diagnostics'] = diagnostics
         
         return results
     
     def plot_layer_importance(self, results: Dict, output_path: str):
         """Plot the importance of each layer for running count representation."""
+        # Remove the 'diagnostics' key if it exists
+        if 'diagnostics' in results:
+            results = {k: v for k, v in results.items() if k != 'diagnostics'}
+        
         layers = list(results.keys())
-        proportions = [results[layer]['mean_proportion_mediated'] for layer in layers]
-        stds = [results[layer]['std_proportion_mediated'] for layer in layers]
+        proportions = []
+        stds = []
+        
+        for layer in layers:
+            if 'mean_proportion_mediated' in results[layer]:
+                proportions.append(results[layer]['mean_proportion_mediated'])
+                stds.append(results[layer]['std_proportion_mediated'])
+            else:
+                # If no valid results for this layer, use 0
+                proportions.append(0)
+                stds.append(0)
         
         plt.figure(figsize=(12, 6))
         plt.bar(layers, proportions, yerr=stds, capsize=5)
         plt.xlabel('Layer Index')
         plt.ylabel('Mean Proportion Mediated')
         plt.title('Layer Importance for Running Count Representation')
+        
+        # Add text showing number of valid pairs for each layer
+        for i, layer in enumerate(layers):
+            valid_pairs = len(results[layer].get('individual_results', []))
+            plt.text(layer, proportions[i], f'n={valid_pairs}', 
+                    ha='center', va='bottom')
+        
+        # Create output directory if it doesn't exist
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         plt.savefig(output_path)
         plt.close()
 
-def generate_similar_list_pairs(num_pairs: int = 10, same_category: bool = True) -> List[Tuple[List[str], List[str], str]]:
-    """Generate pairs of similar word lists from existing examples.
-    
-    Args:
-        num_pairs: Number of pairs to generate
-        same_category: If True, both lists in a pair will be from the same category
+def generate_list_pairs() -> List[Tuple[List[str], List[str], str, str]]:
+    """Generate random pairs of word lists from existing examples.
     
     Returns:
-        List of tuples containing (list_a, list_b, category)
+        List of tuples containing (list_a, list_b, category_a, category_b)
     """
+    # Load config
+    config_path = Path(__file__).parent.parent / 'config.yaml'
+    print(f"Loading config from: {config_path}")
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+    
+    # Get number of pairs from config
+    num_pairs = config['mediation']['num_list_pairs']
+    
+    # Try different possible paths for the data file
+    possible_paths = [
+        Path(config['output_dir']) / config['data_file'],
+        Path('/content/drive/MyDrive/CBAI/data') / config['data_file'],
+        Path('/content/drive/MyDrive/CBAI/CBAI/data') / config['data_file'],
+        Path('data') / config['data_file'],
+        Path('../data') / config['data_file']
+    ]
+    
+    # Find the data file
+    data_path = None
+    for path in possible_paths:
+        if path.exists():
+            data_path = path
+            print(f"Found data file at: {data_path}")
+            break
+    
+    if data_path is None:
+        raise FileNotFoundError(
+            f"Could not find {config['data_file']}. Tried paths:\n" +
+            "\n".join(str(p) for p in possible_paths)
+        )
+    
     # Load examples from the data file
-    data_path = Path('data/examples.json')
     with open(data_path, 'r') as f:
         examples = json.load(f)
     
-    # Load config to get allowed categories
-    config_path = Path('config.yaml')
-    with open(config_path, 'r') as f:
-        config = yaml.safe_load(f)
-    allowed_categories = config['mediation']['categories']
+    if not examples:
+        raise ValueError("No examples found in the data file")
     
-    # Group examples by category, filtering for allowed categories
-    examples_by_category = defaultdict(list)
-    for ex in examples:
-        if ex['category'] in allowed_categories:
-            examples_by_category[ex['category']].append(ex)
+    print(f"\nFound {len(examples)} total examples")
     
-    # Randomly sample categories
-    allowed_categories = [cat for cat in allowed_categories 
-                          if (cat in examples_by_category) and (len(examples_by_category[cat]) >= 2)]
-    selected_categories = random.sample(allowed_categories, num_pairs)
-    pairs = []
+    # Generate random pairs
+    selected_pairs = []
+    attempts = 0
+    max_attempts = num_pairs * 10  # Limit attempts to avoid infinite loops
     
-    print(f"\nGenerating pairs from categories: {selected_categories}")
+    while len(selected_pairs) < num_pairs and attempts < max_attempts:
+        attempts += 1
+        
+        # Randomly select two examples
+        ex1, ex2 = random.sample(examples, 2)
+        
+        # Add the pair if it has different target counts
+        if ex1['num_target'] != ex2['num_target']:
+            selected_pairs.append((ex1['words'], ex2['words'], ex1['category'], ex2['category']))
     
-    # Generate one pair for each selected category
-    for category in selected_categories:
-        category_examples = examples_by_category[category]
-            
-        # Find a pair with similar list lengths but different target counts
-        for i in range(len(category_examples)):
-            ex1 = category_examples[i]
-            for j in range(i + 1, len(category_examples)):
-                ex2 = category_examples[j]
-                if abs(len(ex1['words']) - len(ex2['words'])) <= 2 and ex1['num_target'] != ex2['num_target']:
-                    pairs.append((ex1['words'], ex2['words'], category))
-                    break
-            if len(pairs) > i:  # If we found a pair, break the outer loop
-                break
+    if len(selected_pairs) < num_pairs:
+        print(f"\nWarning: Only found {len(selected_pairs)} valid pairs after {attempts} attempts")
+        print("Will use all available pairs.")
     
-    print(f"\nGenerated {len(pairs)} similar list pairs")
-    for i, (list_a, list_b, category) in enumerate(pairs):
-        print(f"\nPair {i+1} (Category: {category}):")
-        print(f"List A: {list_a}")
-        print(f"List B: {list_b}")
+    print(f"\nGenerated {len(selected_pairs)} pairs:")
+    for i, (list_a, list_b, category_a, category_b) in enumerate(selected_pairs):
+        print(f"\nPair {i+1}:")
+        print(f"  List A: {list_a} (Category: {category_a})")
+        print(f"  List B: {list_b} (Category: {category_b})")
     
-    return pairs
+    return selected_pairs
 
 if __name__ == "__main__":
     # Initialize analysis
+    config_path = Path(__file__).parent.parent / 'config.yaml'
+    print(f"Loading config from: {config_path}")
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+    
     analyzer = ActivationPatching('config.yaml')
     
-    # Load config to get number of pairs
-    with open('config.yaml', 'r') as f:
-        config = yaml.safe_load(f)
-    num_pairs = config['mediation']['num_list_pairs']
+    # Generate list pairs
+    list_pairs = generate_list_pairs()
     
-    # Generate similar list pairs (using same category)
-    list_pairs = generate_similar_list_pairs(num_pairs=num_pairs, same_category=True)
+    # Create output directory
+    output_dir = Path(config['mediation']['output_dir'])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    print(f"\nSaving outputs to: {output_dir}")
     
-    # Run analysis for each pair using its specific category
-    all_results = {}
-    for list_a, list_b, category in list_pairs:
-        print(f"\nAnalyzing pair with category: {category}")
-        results = analyzer.analyze_layer_importance([(list_a, list_b)], category=category)
-        all_results[category] = results
+    # Run analysis for all pairs together
+    print(f"\nAnalyzing {len(list_pairs)} pairs")
+    results = analyzer.analyze_layer_importance(list_pairs)
     
-    # Plot results for each category
-    for category, results in all_results.items():
-        output_path = Path(f'causal_mediation/layer_importance_{category}.png')
-        analyzer.plot_layer_importance(results, output_path)
+    # Plot results
+    output_path = output_dir / 'layer_importance.png'
+    analyzer.plot_layer_importance(results, output_path)
     
     # Save detailed results
-    output_file = Path('causal_mediation/mediation_results.json')
+    output_file = output_dir / 'mediation_results.json'
     with open(output_file, 'w') as f:
-        json.dump(all_results, f, indent=2) 
+        json.dump(results, f, indent=2)
+    print(f"\nSaved mediation analysis results to {output_file}")

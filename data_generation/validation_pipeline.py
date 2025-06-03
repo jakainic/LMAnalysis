@@ -52,9 +52,9 @@ class ValidationPipeline:
         How many words in this list belong to the category '{category}'?
         
         Guidelines:
-        - Count words that are clear members of the category
-        - Do not count words that are only loosely related
-        - When in doubt, do not count the word
+        - Count words that belong to the category in ANY of their meanings
+        - A word can belong to the category even if it has other meanings
+        - At least one of the meanings much clearly belong to the category, but not all meanings must belong to the category to count
         
         Return only the numerical count."""
         
@@ -293,7 +293,7 @@ class ValidationPipeline:
     def validate_dataset(self, input_file: str = None):
         """Validate the entire dataset and analyze distributions."""
         if input_file is None:
-            input_file = self.output_dir / 'examples.json'
+            input_file = self.output_dir / self.config['data_file']
         
         with open(input_file, 'r') as f:
             examples = json.load(f)
@@ -421,10 +421,10 @@ class ValidationPipeline:
             }
         }
         
-        with open(self.output_dir / 'validation_results.json', 'w') as f:
+        with open(self.output_dir / self.config['files']['validation_results'], 'w') as f:
             json.dump(results, f, indent=2)
         
-        print(f"\nValidation results saved to {self.output_dir / 'validation_results.json'}")
+        print(f"\nValidation results saved to {self.output_dir / self.config['files']['validation_results']}")
 
 if __name__ == "__main__":
     validator = ValidationPipeline('config.yaml')

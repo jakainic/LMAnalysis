@@ -166,17 +166,14 @@ class DataGenerator:
                     7. Choose a unique category with clear, objective membership criteria
                     8. Avoid recently used categories like: {', '.join(self.used_custom_categories)}
                     9. Avoid these overrepresented categories: {', '.join(cat for cat, _ in most_used_categories)}
+                    10. IMPORTANT: Avoid overly technical or highly domain-specific categories (e.g., algorithms, 3d_graphics). Categories should not require highly specialized knowledge
                     10. Consider categories like:
-                       - Professional roles in a specific industry
                        - Musical genres or styles
-                       - Literary devices or techniques
-                       - Cultural traditions
+                       - Literary devices
                        - Historical periods
                        - Artistic movements
                        - Geological formations
-                       - Economic concepts
-                       - Philosophical ideas
-                       - Technological innovations
+                       - Botanical terms
                     
                     For example, if the category is 'fruit', you might include:
                     - Common fruits (apple, banana)
@@ -395,7 +392,7 @@ class DataGenerator:
         random.shuffle(examples)
         
         # Save all examples in a single file
-        output_file = self.output_dir / 'examples.json'
+        output_file = self.output_dir / self.config['data_file']
         with open(output_file, 'w') as f:
             json.dump(examples, f, indent=2)
         print(f"\nSaved {len(examples)} examples to {output_file}")
