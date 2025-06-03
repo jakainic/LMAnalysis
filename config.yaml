@@ -7,12 +7,12 @@ min_list_length: 5
 max_list_length: 15
 min_target_words: 1
 max_target_words: 8
-num_examples: 100
+num_examples: 3000
 
 # Method proportions (must sum to 1.0)
 method_proportions:
-  systematic: 0
-  llm: 1
+  systematic: 0.3
+  llm: 0.7
 
 # Deduplication settings
 deduplication:
