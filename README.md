@@ -1,10 +1,12 @@
-# Language Model Analysis Pipeline
+# Language Model Analysis Pipeline - QUICK SPRINT
 
 This project implements a comprehensive pipeline for analyzing language models' behavior in category counting tasks through three main components:
 
 1. Synthetic Data Generation
 2. Model Benchmarking
 3. Causal Mediation Analysis
+
+This project was implemented in 2 days and is therefore not comprehensive nor fully debugged.
 
 ## Overview
 
